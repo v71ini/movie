@@ -1,45 +1,41 @@
-var random_margin = ["-5px", "1px", "5px", "10px", "7px"];
-var random_colors = ["#c2ff3d","#ff3de8","#3dc2ff","#04e022","#bc83e6","#ebb328"];
-var random_degree = ["rotate(3deg)", "rotate(1deg)", "rotate(-1deg)", "rotate(-3deg)", "rotate(-5deg)", "rotate(-8deg)"];
-var index = 0;
+const genRanHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
 
-window.onload = document.querySelector("#user_input").select();
+        var data = []
+        if (localStorage.getItem('data1')) {
+            p = localStorage.getItem('data1');
+            data = JSON.parse(p);
+        }
+        console.log(data)
+        var t = ""
+        const ele = document.getElementById("notes");
+        data.map(d => {
+            t += `<div class="notebox"  ><div class="clrr" style="background-color:${d.color}"  ></div><div class="hash">#${d.hash}</div><hr/><div class="notetxt"><p>${d.text}</p></div> </div>`
 
-document.querySelector("#add_note").addEventListener("click", () => {
-  document.querySelector("#modal").style.display = "block";
-});
 
-document.querySelector("#hide").addEventListener("click", () => {
-  document.querySelector("#modal").style.display = "none";
-});
 
-document.querySelector("#user_input").addEventListener('keydown', (event) => {
-  if(event.key === 'Enter'){
-    const text = document.querySelector("#user_input");
-    createStickyNote(text.value);
-  }
-});
+        })
 
-createStickyNote = (text) => {
-  let note = document.createElement("div");
-  let details = document.createElement("div");
-  let noteText = document.createElement("h1");
+        function deleteit() {
+            data.pop();
+            const dta = JSON.stringify(data);
+            localStorage.setItem('data1', dta);
+            window.location.reload(false)
+        }
+        document.getElementById('notes').innerHTML = t;
 
-  note.className = "note";
-  details.className = "details";
-  noteText.textContent = text;
+        function submit(clr) {
+            var c = document.getElementById('txt1')
 
-  details.appendChild(noteText);
-  note.appendChild(details);
+            data.push({
+                hash: genRanHex(6),
+                color: clr,
+                text: c.value
+            })
 
-  if(index > random_colors.length - 1)
-    index = 0;
+            const dta = JSON.stringify(data);
 
-  note.setAttribute("style", `margin:${random_margin[Math.floor(Math.random() * random_margin.length)]}; background-color:${random_colors[index++]}; transform:${random_degree[Math.floor(Math.random() * random_degree.length)]}`);
+            localStorage.setItem('data1', dta);
 
-  note.addEventListener("dblclick", () => {
-    note.remove();
-  })
 
-  document.querySelector("#all_notes").appendChild(note);
-}
+            window.location.reload(false)
+        }
